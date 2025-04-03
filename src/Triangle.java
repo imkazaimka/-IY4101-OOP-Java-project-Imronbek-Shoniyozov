@@ -1,53 +1,56 @@
 public class Triangle extends Shape {
-    // Three vertices of the triangle
-    Coordinates v1, v2, v3;
+    private Coordinates v1;
+    private Coordinates v2;
+    private Coordinates v3;
 
-    // Constructor: Receives three Coordinates as vertices.
-    // We use the first vertex (v1) as the base position for the Shape.
     public Triangle(Coordinates v1, Coordinates v2, Coordinates v3) {
-        super(v1);
+        super(3, v1);
         this.v1 = v1;
         this.v2 = v2;
         this.v3 = v3;
     }
 
-    // Helper method: calculates the distance between two points using the basic formula.
-    double distance(Coordinates a, Coordinates b) {
-        int dx = b.x - a.x;
-        int dy = b.y - a.y;
-        return Math.sqrt(dx * dx + dy * dy);
+    @Override
+    public void scale(int factor, boolean sign) {
+        v2 = scaleVertex(v1, v2, factor, sign);
+        v3 = scaleVertex(v1, v3, factor, sign);
     }
 
-    // Perimeter is the sum of the lengths of the three sides.
-    public double getPerimeter() {
-        double side1 = distance(v1, v2);
-        double side2 = distance(v2, v3);
-        double side3 = distance(v3, v1);
-        return side1 + side2 + side3;
+    private Coordinates scaleVertex(Coordinates anchor, Coordinates vertex, int factor, boolean sign) {
+        int diffX = vertex.getX() - anchor.getX();
+        int diffY = vertex.getY() - anchor.getY();
+        int newDiffX = sign ? diffX * factor : diffX / factor;
+        int newDiffY = sign ? diffY * factor : diffY / factor;
+        return new Coordinates(anchor.getX() + newDiffX, anchor.getY() + newDiffY);
     }
 
-    // Area using Heron's formula: area = sqrt(s * (s - side1) * (s - side2) * (s - side3))
+    @Override
     public double getArea() {
-        double side1 = distance(v1, v2);
-        double side2 = distance(v2, v3);
-        double side3 = distance(v3, v1);
-        double s = (side1 + side2 + side3) / 2.0;
-        return Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
+        double a = v1.distance(v2);
+        double b = v2.distance(v3);
+        double c = v3.distance(v1);
+        double s = (a + b + c) / 2.0;
+        return Math.sqrt(s * (s - a) * (s - b) * (s - c));
     }
 
-    // Translate the triangle by moving all three vertices.
+    @Override
+    public double getPerimeter() {
+        return v1.distance(v2) + v2.distance(v3) + v3.distance(v1);
+    }
+
+    @Override
     public void translate(int dx, int dy) {
         v1.translate(dx, dy);
         v2.translate(dx, dy);
         v3.translate(dx, dy);
     }
 
-    // Returns a string representation of the triangle's properties.
+    @Override
     public String display() {
-        return "Triangle: v1=" + v1.toString() +
-                ", v2=" + v2.toString() +
-                ", v3=" + v3.toString() +
-                ", Area=" + getArea() +
-                ", Perimeter=" + getPerimeter();
+        return "Triangle: Vertex1: " + v1.display() +
+                ", Vertex2: " + v2.display() +
+                ", Vertex3: " + v3.display() +
+                ", Area: " + getArea() +
+                ", Perimeter: " + getPerimeter();
     }
 }

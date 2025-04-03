@@ -1,22 +1,35 @@
 public abstract class Shape {
-    Coordinates position;
 
-    public Shape(Coordinates position) {
-        this.position = position;
+    protected Coordinates position;
+    protected int sides; // Not needed but included for completeness
+
+
+    public Shape(int noOfSides, Coordinates coord) {
+        this.position = coord;
+        this.sides = noOfSides;
     }
 
 
-    abstract double getArea();
-    abstract double getPerimeter();
+    public Coordinates getCoordinates() {
+        return position;
+    }
 
+
+    public int getSides() {
+        return sides;
+    }
+
+
+    public void setCoordinates(Coordinates newCoord) {
+        this.position = newCoord;
+    }
 
     public void translate(int dx, int dy) {
         position.translate(dx, dy);
     }
 
-    public String display() {
-        return "Position: " + position.toString() +
-                ", Area: " + getArea() +
-                ", Perimeter: " + getPerimeter();
-    }
+    public abstract void scale(int factor, boolean sign);
+    public abstract double getArea();
+    public abstract double getPerimeter();
+    public abstract String display();
 }

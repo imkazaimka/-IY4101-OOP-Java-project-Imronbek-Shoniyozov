@@ -1,21 +1,36 @@
 public class Rectangle extends Shape {
-    int width, height;
+    private double width;
+    private double length;
 
-    public Rectangle(Coordinates pos, int width, int height) {
-        super(pos);
+    public Rectangle(Coordinates pos, double width, double length) {
+        super(4, pos);
         this.width = width;
-        this.height = height;
+        this.length = length;
     }
 
+    @Override
+    public void scale(int factor, boolean sign) {
+        if (sign) {
+            width *= factor;
+            length *= factor;
+        } else {
+            width /= factor;
+            length /= factor;
+        }
+    }
+
+    @Override
     public double getArea() {
-        return width * height;
+        return width * length;
     }
 
+    @Override
     public double getPerimeter() {
-        return 2 * (width + height);
+        return 2 * (width + length);
     }
 
+    @Override
     public String display() {
-        return "Rectangle: " + super.display();
+        return "Rectangle at " + position.display() + ", Width: " + width + ", Length: " + length;
     }
 }
