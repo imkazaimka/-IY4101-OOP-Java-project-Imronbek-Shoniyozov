@@ -1,7 +1,10 @@
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
         ShapeManager manager = new ShapeManager();
-        java.util.Scanner scanner = new java.util.Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         boolean exit = false;
 
         while (!exit) {
@@ -9,22 +12,27 @@ public class Main {
             try {
                 int choice = scanner.nextInt();
                 scanner.nextLine(); // consume newline
-
                 switch (choice) {
                     case 1:
                         manager.addShape();
                         break;
                     case 2:
-                        manager.listShapes();
+                        manager.removeShape();
                         break;
                     case 3:
-                        manager.translateShapes();
+                        manager.getShapeInfo();
                         break;
                     case 4:
-                        manager.scaleShapes();
+                        manager.viewAreaPerimeter();
                         break;
                     case 5:
-                        manager.viewShapeMetrics();
+                        manager.displayAllShapes();
+                        break;
+                    case 6:
+                        manager.translateAllShapes();
+                        break;
+                    case 7:
+                        manager.scaleAllShapes();
                         break;
                     case 0:
                         exit = true;
@@ -32,7 +40,7 @@ public class Main {
                     default:
                         System.out.println("Invalid option, please try again.");
                 }
-            } catch (java.util.InputMismatchException ime) {
+            } catch (InputMismatchException ime) {
                 System.out.println("Invalid input. Please enter a number corresponding to a menu option.");
                 scanner.nextLine(); // clear the invalid input
             }
@@ -41,15 +49,17 @@ public class Main {
         scanner.close();
     }
 
-    // Print the main menu options.
+    // Print the main menu options as per the assignment requirements.
     static void printMainMenu() {
         System.out.println("\n***** Shape Management Menu *****");
         System.out.println("1. Add a Shape");
-        System.out.println("2. List all Shapes");
-        System.out.println("3. Translate all Shapes");
-        System.out.println("4. Scale all Shapes");
-        System.out.println("5. View Shape Metrics (Area & Perimeter)");
-        System.out.println("0. Exit");
+        System.out.println("2. Remove a Shape by Position");
+        System.out.println("3. Get Information about a Shape by Position");
+        System.out.println("4. Get Area and Perimeter of a Shape by Position");
+        System.out.println("5. Display Information of All Shapes");
+        System.out.println("6. Translate All Shapes");
+        System.out.println("7. Scale All Shapes");
+        System.out.println("0. Quit");
         System.out.print("Enter your choice: ");
     }
 }

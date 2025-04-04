@@ -10,7 +10,7 @@ public class ShapeManager {
         scanner = new Scanner(System.in);
     }
 
-    // Add a new shape based on user input.
+    // Option 1: Add a new shape based on user input.
     public void addShape() {
         try {
             System.out.println("\nSelect shape type to add:");
@@ -94,13 +94,64 @@ public class ShapeManager {
         }
     }
 
-    // List all shapes with a brief description.
+    // Option 2: Remove a shape by its position.
+    public void removeShape() {
+        try {
+            System.out.print("Enter the shape number to remove: ");
+            int index = scanner.nextInt();
+            scanner.nextLine(); // consume newline
+            Shape removed = shapeList.removeShape(index - 1);
+            if (removed != null) {
+                System.out.println("Removed: " + removed.display());
+            }
+        } catch (InputMismatchException ime) {
+            System.out.println("Invalid input. Please enter a valid number.");
+            scanner.nextLine();
+        }
+    }
+
+    // Option 3: Get information about a shape by its position.
+    public void getShapeInfo() {
+        try {
+            System.out.print("Enter the shape number to get information: ");
+            int index = scanner.nextInt();
+            scanner.nextLine(); // consume newline
+            Shape s = shapeList.getShape(index - 1);
+            if (s != null) {
+                System.out.println("Shape Info: " + s.display());
+            }
+        } catch (InputMismatchException ime) {
+            System.out.println("Invalid input. Please enter a valid number.");
+            scanner.nextLine();
+        }
+    }
+
+    // Option 4: Get area and perimeter of a shape by its position.
+    public void viewShapeMetrics() {
+        try {
+            System.out.print("Enter the shape number to view area and perimeter: ");
+            int index = scanner.nextInt();
+            scanner.nextLine(); // consume newline
+            Shape s = shapeList.getShape(index - 1);
+            if (s == null) {
+                System.out.println("Invalid shape number.");
+            } else {
+                System.out.println("Area: " + s.getArea());
+                System.out.println("Perimeter: " + s.getPerimeter());
+            }
+        } catch (InputMismatchException ime) {
+            System.out.println("Invalid input. Please enter a valid number.");
+            scanner.nextLine(); // clear the invalid input
+        }
+    }
+
+    // Option 5: Display information of all shapes.
     public void listShapes() {
         System.out.println("\n--- List of Shapes ---");
         System.out.println(shapeList.display());
     }
 
-    // Translate all shapes by a given (dx, dy).
+    // Option 6: Translate all shapes by a given (dx, dy).
     public void translateShapes() {
         try {
             System.out.print("Enter translation dx: ");
@@ -115,7 +166,7 @@ public class ShapeManager {
         }
     }
 
-    // Scale all shapes by a given factor (using multiplication or division).
+    // Option 7: Scale all shapes by a given factor (using multiplication or division).
     public void scaleShapes() {
         try {
             System.out.print("Enter scaling factor (positive integer): ");
@@ -130,24 +181,6 @@ public class ShapeManager {
             System.out.println("All shapes scaled.");
         } catch (InputMismatchException ime) {
             System.out.println("Invalid scaling input.");
-            scanner.nextLine(); // clear the invalid input
-        }
-    }
-
-    // View detailed metrics (area and perimeter) of a specific shape by its index.
-    public void viewShapeMetrics() {
-        try {
-            System.out.print("Enter the shape number to view metrics: ");
-            int index = scanner.nextInt();
-            Shape s = shapeList.getShape(index - 1);
-            if (s == null) {
-                System.out.println("Invalid shape number.");
-            } else {
-                System.out.println("Area: " + s.getArea());
-                System.out.println("Perimeter: " + s.getPerimeter());
-            }
-        } catch (InputMismatchException ime) {
-            System.out.println("Invalid input. Please enter a valid shape number.");
             scanner.nextLine(); // clear the invalid input
         }
     }
