@@ -23,16 +23,16 @@ public class Main {
                         manager.getShapeInfo();
                         break;
                     case 4:
-                        manager.viewAreaPerimeter();
+                        manager.viewShapeMetrics();
                         break;
                     case 5:
-                        manager.displayAllShapes();
+                        manager.listShapes();
                         break;
                     case 6:
-                        manager.translateAllShapes();
+                        manager.translateShapes();
                         break;
                     case 7:
-                        manager.scaleAllShapes();
+                        manager.scaleShapes();
                         break;
                     case 0:
                         exit = true;
