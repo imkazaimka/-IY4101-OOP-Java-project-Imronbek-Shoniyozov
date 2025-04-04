@@ -1,13 +1,12 @@
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ShapeManager {
-    private ArrayList<Shape> shapes;
+    private ShapeList shapeList;
     private Scanner scanner;
 
     public ShapeManager() {
-        shapes = new ArrayList<>();
+        shapeList = new ShapeList();
         scanner = new Scanner(System.in);
     }
 
@@ -35,7 +34,7 @@ public class ShapeManager {
                     if(width <= 0 || length <= 0) {
                         System.out.println("Dimensions must be positive. Shape not added.");
                     } else {
-                        shapes.add(new Rectangle(new Coordinates(rx, ry), width, length));
+                        shapeList.addShape(new Rectangle(new Coordinates(rx, ry), width, length));
                         System.out.println("Rectangle added.");
                     }
                     break;
@@ -49,7 +48,7 @@ public class ShapeManager {
                     if(side <= 0) {
                         System.out.println("Side length must be positive. Shape not added.");
                     } else {
-                        shapes.add(new Square(new Coordinates(sx, sy), side));
+                        shapeList.addShape(new Square(new Coordinates(sx, sy), side));
                         System.out.println("Square added.");
                     }
                     break;
@@ -63,7 +62,7 @@ public class ShapeManager {
                     if(radius <= 0) {
                         System.out.println("Radius must be positive. Shape not added.");
                     } else {
-                        shapes.add(new Circle(new Coordinates(cx, cy), radius));
+                        shapeList.addShape(new Circle(new Coordinates(cx, cy), radius));
                         System.out.println("Circle added.");
                     }
                     break;
@@ -81,7 +80,7 @@ public class ShapeManager {
                     int t3x = scanner.nextInt();
                     System.out.print("Vertex 3 - y: ");
                     int t3y = scanner.nextInt();
-                    shapes.add(new Triangle(new Coordinates(t1x, t1y),
+                    shapeList.addShape(new Triangle(new Coordinates(t1x, t1y),
                             new Coordinates(t2x, t2y),
                             new Coordinates(t3x, t3y)));
                     System.out.println("Triangle added.");
@@ -98,13 +97,7 @@ public class ShapeManager {
     // List all shapes with a brief description.
     public void listShapes() {
         System.out.println("\n--- List of Shapes ---");
-        if (shapes.isEmpty()) {
-            System.out.println("No shapes available.");
-        } else {
-            for (int i = 0; i < shapes.size(); i++) {
-                System.out.println((i + 1) + ". " + shapes.get(i).display());
-            }
-        }
+        System.out.println(shapeList.display());
     }
 
     // Translate all shapes by a given (dx, dy).
@@ -114,9 +107,7 @@ public class ShapeManager {
             int dx = scanner.nextInt();
             System.out.print("Enter translation dy: ");
             int dy = scanner.nextInt();
-            for (Shape s : shapes) {
-                s.translate(dx, dy);
-            }
+            shapeList.translateShapes(dx, dy);
             System.out.println("All shapes translated by (" + dx + ", " + dy + ").");
         } catch (InputMismatchException ime) {
             System.out.println("Invalid translation input.");
@@ -135,9 +126,7 @@ public class ShapeManager {
             }
             System.out.print("Scale by multiplication? (true/false): ");
             boolean sign = scanner.nextBoolean();
-            for (Shape s : shapes) {
-                s.scale(factor, sign);
-            }
+            shapeList.scaleShapes(factor, sign);
             System.out.println("All shapes scaled.");
         } catch (InputMismatchException ime) {
             System.out.println("Invalid scaling input.");
@@ -150,10 +139,10 @@ public class ShapeManager {
         try {
             System.out.print("Enter the shape number to view metrics: ");
             int index = scanner.nextInt();
-            if (index < 1 || index > shapes.size()) {
+            Shape s = shapeList.getShape(index - 1);
+            if (s == null) {
                 System.out.println("Invalid shape number.");
             } else {
-                Shape s = shapes.get(index - 1);
                 System.out.println("Area: " + s.getArea());
                 System.out.println("Perimeter: " + s.getPerimeter());
             }
