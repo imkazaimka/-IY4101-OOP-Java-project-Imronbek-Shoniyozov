@@ -10,197 +10,203 @@ public class ShapeManager {
         scanner = new Scanner(System.in);
     }
 
+    // Helper method: Read an integer value with a prompt and validate input.
+    private int readValidatedInt(String prompt) {
+        int value;
+        while (true) {
+            System.out.print(prompt);
+            try {
+                value = scanner.nextInt();
+                scanner.nextLine(); // consume newline
+                break;
+            } catch (InputMismatchException ime) {
+                System.out.println("Invalid input. Please enter an integer value.");
+                scanner.nextLine(); // clear invalid input
+            }
+        }
+        return value;
+    }
+
+    // Helper method: Read a double value with a prompt and validate input.
+    private double readValidatedDouble(String prompt) {
+        double value;
+        while (true) {
+            System.out.print(prompt);
+            try {
+                value = scanner.nextDouble();
+                scanner.nextLine(); // consume newline
+                break;
+            } catch (InputMismatchException ime) {
+                System.out.println("Invalid input. Please enter a numeric value.");
+                scanner.nextLine(); // clear invalid input
+            }
+        }
+        return value;
+    }
+
+    // Helper method: Read a boolean value with a prompt and validate input.
+    private boolean readValidatedBoolean(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            if (scanner.hasNextBoolean()) {
+                boolean result = scanner.nextBoolean();
+                scanner.nextLine(); // consume newline
+                return result;
+            } else {
+                System.out.println("Invalid input. Please enter 'true' or 'false'.");
+                scanner.nextLine(); // clear invalid input
+            }
+        }
+    }
+
+    // Helper method: Read coordinates and auto-correct negative values.
+    private Coordinates readValidatedCoordinates(String vertexName) {
+        int x = readValidatedInt(vertexName + " - x (will be converted to positive if negative): ");
+        int y = readValidatedInt(vertexName + " - y (will be converted to positive if negative): ");
+        if (x < 0 || y < 0) {
+            System.out.println("Warning: Negative coordinate entered; automatically converting to positive values.");
+            x = Math.abs(x);
+            y = Math.abs(y);
+        }
+        return new Coordinates(x, y);
+    }
+
     // Option 1: Add a new shape based on user input.
     public void addShape() {
-        try {
-            System.out.println("\nSelect shape type to add:");
-            System.out.println("1. Rectangle");
-            System.out.println("2. Square");
-            System.out.println("3. Circle");
-            System.out.println("4. Triangle");
-            int type = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+        System.out.println("\n***********************************");
+        System.out.println("         ADD A NEW SHAPE           ");
+        System.out.println("***********************************");
+        System.out.println("Select shape type to add:");
+        System.out.println("1. Rectangle");
+        System.out.println("2. Square");
+        System.out.println("3. Circle");
+        System.out.println("4. Triangle");
 
-            switch (type) {
-                case 1:
-                    System.out.print("Enter x coordinate for Rectangle: ");
-                    int rx = scanner.nextInt();
-                    System.out.print("Enter y coordinate for Rectangle: ");
-                    int ry = scanner.nextInt();
-                    System.out.print("Enter width (positive): ");
-                    double width = scanner.nextDouble();
-                    System.out.print("Enter length (positive): ");
-                    double length = scanner.nextDouble();
-                    if(width <= 0 || length <= 0) {
-                        System.out.println("Dimensions must be positive. Shape not added.");
-                    } else {
-                        shapeList.addShape(new Rectangle(new Coordinates(rx, ry), width, length));
-                        System.out.println("Rectangle added.");
-                    }
+        int type = readValidatedInt("Your choice: ");
+
+        switch (type) {
+            case 1:
+                // Rectangle
+                Coordinates rectCoord = readValidatedCoordinates("Rectangle position");
+                double width = readValidatedDouble("Enter width (positive): ");
+                double length = readValidatedDouble("Enter length (positive): ");
+                if (width <= 0 || length <= 0) {
+                    System.out.println("Dimensions must be positive. Rectangle not added.");
+                } else {
+                    shapeList.addShape(new Rectangle(rectCoord, width, length));
+                    System.out.println("Rectangle added.");
+                }
+                break;
+            case 2:
+                // Square
+                Coordinates squareCoord = readValidatedCoordinates("Square position");
+                double side = readValidatedDouble("Enter side length (positive): ");
+                if (side <= 0) {
+                    System.out.println("Side length must be positive. Square not added.");
+                } else {
+                    shapeList.addShape(new Square(squareCoord, side));
+                    System.out.println("Square added.");
+                }
+                break;
+            case 3:
+                // Circle
+                Coordinates circleCoord = readValidatedCoordinates("Circle center");
+                double radius = readValidatedDouble("Enter radius (positive): ");
+                if (radius <= 0) {
+                    System.out.println("Radius must be positive. Circle not added.");
+                } else {
+                    shapeList.addShape(new Circle(circleCoord, radius));
+                    System.out.println("Circle added.");
+                }
+                break;
+            case 4:
+                // Triangle
+                System.out.println("Enter coordinates for Triangle vertices:");
+                Coordinates v1 = readValidatedCoordinates("Vertex 1");
+                Coordinates v2 = readValidatedCoordinates("Vertex 2");
+                Coordinates v3 = readValidatedCoordinates("Vertex 3");
+
+                // Validate that all vertices are distinct.
+                if ((v1.getX() == v2.getX() && v1.getY() == v2.getY()) ||
+                        (v1.getX() == v3.getX() && v1.getY() == v3.getY()) ||
+                        (v2.getX() == v3.getX() && v2.getY() == v3.getY())) {
+                    System.out.println("Vertices must be distinct. Triangle not added.");
                     break;
-                case 2:
-                    System.out.print("Enter x coordinate for Square: ");
-                    int sx = scanner.nextInt();
-                    System.out.print("Enter y coordinate for Square: ");
-                    int sy = scanner.nextInt();
-                    System.out.print("Enter side length (positive): ");
-                    double side = scanner.nextDouble();
-                    if(side <= 0) {
-                        System.out.println("Side length must be positive. Shape not added.");
-                    } else {
-                        shapeList.addShape(new Square(new Coordinates(sx, sy), side));
-                        System.out.println("Square added.");
-                    }
+                }
+
+                Triangle triangle = new Triangle(v1, v2, v3);
+
+                // Validate that the triangle is non-degenerate (area != 0)
+                if (triangle.getArea() == 0) {
+                    System.out.println("Vertices are collinear. Not a valid triangle. Triangle not added.");
                     break;
-                case 3:
-                    System.out.print("Enter x coordinate for Circle: ");
-                    int cx = scanner.nextInt();
-                    System.out.print("Enter y coordinate for Circle: ");
-                    int cy = scanner.nextInt();
-                    System.out.print("Enter radius (positive): ");
-                    double radius = scanner.nextDouble();
-                    if(radius <= 0) {
-                        System.out.println("Radius must be positive. Shape not added.");
-                    } else {
-                        shapeList.addShape(new Circle(new Coordinates(cx, cy), radius));
-                        System.out.println("Circle added.");
-                    }
-                    break;
-                case 4:
-                    System.out.println("Enter coordinates for Triangle vertices:");
-                    System.out.print("Vertex 1 - x: ");
-                    int t1x = scanner.nextInt();
-                    System.out.print("Vertex 1 - y: ");
-                    int t1y = scanner.nextInt();
-                    System.out.print("Vertex 2 - x: ");
-                    int t2x = scanner.nextInt();
-                    System.out.print("Vertex 2 - y: ");
-                    int t2y = scanner.nextInt();
-                    System.out.print("Vertex 3 - x: ");
-                    int t3x = scanner.nextInt();
-                    System.out.print("Vertex 3 - y: ");
-                    int t3y = scanner.nextInt();
-
-                    // Validate that all vertices are distinct.
-                    if ((t1x == t2x && t1y == t2y) ||
-                            (t1x == t3x && t1y == t3y) ||
-                            (t2x == t3x && t2y == t3y)) {
-                        System.out.println("Vertices must be distinct. Triangle not added.");
-                        break;
-                    }
-
-                    // Create a Triangle object using the provided vertices.
-                    Triangle triangle = new Triangle(new Coordinates(t1x, t1y),
-                            new Coordinates(t2x, t2y),
-                            new Coordinates(t3x, t3y));
-
-                    // Validate that the triangle is non-degenerate (area != 0).
-                    if (triangle.getArea() == 0) {
-                        System.out.println("Vertices are collinear. Not a valid triangle. Triangle not added.");
-                        break;
-                    }
-
-                    shapeList.addShape(triangle);
-                    System.out.println("Triangle added.");
-                    break;
-
-                default:
-                    System.out.println("Invalid shape type selected.");
-            }
-        } catch (InputMismatchException ime) {
-            System.out.println("Invalid input. Please enter numeric values where required.");
-            scanner.nextLine(); // clear the invalid input
+                }
+                shapeList.addShape(triangle);
+                System.out.println("Triangle added.");
+                break;
+            default:
+                System.out.println("Invalid shape type selected.");
         }
     }
 
     // Option 2: Remove a shape by its position.
     public void removeShape() {
-        try {
-            System.out.print("Enter the shape number to remove: ");
-            int index = scanner.nextInt();
-            scanner.nextLine(); // consume newline
-            Shape removed = shapeList.removeShape(index - 1);
-            if (removed != null) {
-                System.out.println("Removed: " + removed.display());
-            }
-        } catch (InputMismatchException ime) {
-            System.out.println("Invalid input. Please enter a valid number.");
-            scanner.nextLine();
+        System.out.println("\n--- REMOVE A SHAPE ---");
+        int index = readValidatedInt("Enter the shape number to remove: ");
+        Shape removed = shapeList.removeShape(index - 1);
+        if (removed != null) {
+            System.out.println("Removed: " + removed.display());
         }
     }
 
     // Option 3: Get information about a shape by its position.
     public void getShapeInfo() {
-        try {
-            System.out.print("Enter the shape number to get information: ");
-            int index = scanner.nextInt();
-            scanner.nextLine(); // consume newline
-            Shape s = shapeList.getShape(index - 1);
-            if (s != null) {
-                System.out.println("Shape Info: " + s.display());
-            }
-        } catch (InputMismatchException ime) {
-            System.out.println("Invalid input. Please enter a valid number.");
-            scanner.nextLine();
+        System.out.println("\n--- GET SHAPE INFORMATION ---");
+        int index = readValidatedInt("Enter the shape number to get information: ");
+        Shape s = shapeList.getShape(index - 1);
+        if (s != null) {
+            System.out.println("Shape Info: " + s.display());
         }
     }
 
     // Option 4: Get area and perimeter of a shape by its position.
     public void viewShapeMetrics() {
-        try {
-            System.out.print("Enter the shape number to view area and perimeter: ");
-            int index = scanner.nextInt();
-            scanner.nextLine(); // consume newline
-            Shape s = shapeList.getShape(index - 1);
-            if (s == null) {
-                System.out.println("Invalid shape number.");
-            } else {
-                System.out.println("Area: " + s.getArea());
-                System.out.println("Perimeter: " + s.getPerimeter());
-            }
-        } catch (InputMismatchException ime) {
-            System.out.println("Invalid input. Please enter a valid number.");
-            scanner.nextLine(); // clear the invalid input
+        System.out.println("\n--- VIEW AREA & PERIMETER ---");
+        int index = readValidatedInt("Enter the shape number to view area and perimeter: ");
+        Shape s = shapeList.getShape(index - 1);
+        if (s == null) {
+            System.out.println("Invalid shape number.");
+        } else {
+            System.out.println("Area: " + s.getArea());
+            System.out.println("Perimeter: " + s.getPerimeter());
         }
     }
 
     // Option 5: Display information of all shapes.
     public void listShapes() {
-        System.out.println("\n--- List of Shapes ---");
+        System.out.println("\n--- LIST OF ALL SHAPES ---");
         System.out.println(shapeList.display());
     }
 
     // Option 6: Translate all shapes by a given (dx, dy).
     public void translateShapes() {
-        try {
-            System.out.print("Enter translation dx: ");
-            int dx = scanner.nextInt();
-            System.out.print("Enter translation dy: ");
-            int dy = scanner.nextInt();
-            shapeList.translateShapes(dx, dy);
-            System.out.println("All shapes translated by (" + dx + ", " + dy + ").");
-        } catch (InputMismatchException ime) {
-            System.out.println("Invalid translation input.");
-            scanner.nextLine(); // clear the invalid input
-        }
+        System.out.println("\n--- TRANSLATE SHAPES ---");
+        int dx = readValidatedInt("Enter translation dx: ");
+        int dy = readValidatedInt("Enter translation dy: ");
+        shapeList.translateShapes(dx, dy);
+        System.out.println("All shapes translated by (" + dx + ", " + dy + ").");
     }
 
-    // Option 7: Scale all shapes by a given factor (using multiplication or division).
+    // Option 7: Scale all shapes by a given factor.
     public void scaleShapes() {
-        try {
-            System.out.print("Enter scaling factor (positive integer): ");
-            int factor = scanner.nextInt();
-            if(factor <= 0) {
-                System.out.println("Scaling factor must be positive.");
-                return;
-            }
-            System.out.print("Scale by multiplication? (true/false): ");
-            boolean sign = scanner.nextBoolean();
-            shapeList.scaleShapes(factor, sign);
-            System.out.println("All shapes scaled.");
-        } catch (InputMismatchException ime) {
-            System.out.println("Invalid scaling input.");
-            scanner.nextLine(); // clear the invalid input
+        System.out.println("\n--- SCALE SHAPES ---");
+        int factor = readValidatedInt("Enter scaling factor (positive integer): ");
+        if (factor <= 0) {
+            System.out.println("Scaling factor must be positive.");
+            return;
         }
+        boolean sign = readValidatedBoolean("Scale by multiplication? (true/false): ");
+        shapeList.scaleShapes(factor, sign);
+        System.out.println("All shapes scaled.");
     }
 }
