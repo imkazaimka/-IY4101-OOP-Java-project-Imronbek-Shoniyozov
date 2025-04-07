@@ -80,11 +80,30 @@ public class ShapeManager {
                     int t3x = scanner.nextInt();
                     System.out.print("Vertex 3 - y: ");
                     int t3y = scanner.nextInt();
-                    shapeList.addShape(new Triangle(new Coordinates(t1x, t1y),
+
+                    // Validate that all vertices are distinct.
+                    if ((t1x == t2x && t1y == t2y) ||
+                            (t1x == t3x && t1y == t3y) ||
+                            (t2x == t3x && t2y == t3y)) {
+                        System.out.println("Vertices must be distinct. Triangle not added.");
+                        break;
+                    }
+
+                    // Create a Triangle object using the provided vertices.
+                    Triangle triangle = new Triangle(new Coordinates(t1x, t1y),
                             new Coordinates(t2x, t2y),
-                            new Coordinates(t3x, t3y)));
+                            new Coordinates(t3x, t3y));
+
+                    // Validate that the triangle is non-degenerate (area != 0).
+                    if (triangle.getArea() == 0) {
+                        System.out.println("Vertices are collinear. Not a valid triangle. Triangle not added.");
+                        break;
+                    }
+
+                    shapeList.addShape(triangle);
                     System.out.println("Triangle added.");
                     break;
+
                 default:
                     System.out.println("Invalid shape type selected.");
             }
