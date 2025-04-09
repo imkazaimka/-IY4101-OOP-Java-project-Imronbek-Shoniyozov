@@ -58,18 +58,22 @@ public class Main {
                     pause(scanner);
                     break;
                 case 2:
+                    manager.drawShapes();
                     manager.removeShape();
                     pause(scanner);
                     break;
                 case 3:
+                    manager.drawShapes();
                     manager.getShapeInfo();
                     pause(scanner);
                     break;
                 case 4:
+                    manager.drawShapes();
                     manager.viewShapeMetrics();
                     pause(scanner);
                     break;
                 case 5:
+                    manager.drawShapes();
                     manager.listShapes();
                     pause(scanner);
                     break;

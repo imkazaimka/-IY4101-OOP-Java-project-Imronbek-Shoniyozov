@@ -209,4 +209,59 @@ public class ShapeManager {
         shapeList.scaleShapes(factor, sign);
         System.out.println("All shapes scaled.");
     }
-}
+
+    public void drawShapes() {
+        System.out.println("\n--- DRAWING SHAPES ---");
+        int cols = 50;
+        int rows = 20;
+        char[][] canvas = new char[rows][cols];
+
+        // Initialize the canvas with dots.
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                canvas[r][c] = '.';
+            }
+        }
+
+        // Prepare a StringBuilder to collect warnings for shapes outside the canvas.
+        StringBuilder warnings = new StringBuilder();
+
+        // Loop over each shape in the shape list.
+        for (int i = 0; i < shapeList.getNumberOfShapes(); i++) {
+            Shape s = shapeList.getShape(i);
+            Coordinates pos = s.getCoordinates();
+            int id = i + 1;  // Shape ID for display.
+            int x = pos.getX();
+            int y = pos.getY();
+
+            // Check if the anchor position is within the canvas bounds.
+            if (x < 0 || x >= cols || y < 0 || y >= rows) {
+                warnings.append("Shape number ").append(id)
+                        .append(" exceeds the boundaries of the graph.\n");
+            } else {
+                // Determine a symbol for the shape's ID.
+                char symbol;
+                if (id < 10) {
+                    symbol = (char) ('0' + id);
+                } else if (id < 36) { // 10 -> A, 11 -> B, etc.
+                    symbol = (char) ('A' + id - 10);
+                } else {
+                    symbol = '*'; // Fallback for IDs 36 and above.
+                }
+                canvas[y][x] = symbol;
+            }
+        }
+
+        // Print the canvas.
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                System.out.print(canvas[r][c] + " ");
+            }
+            System.out.println();
+        }
+
+        // Print any warnings about shapes that exceed boundaries.
+        if (warnings.length() > 0) {
+            System.out.println(warnings.toString());
+        }
+    }}
