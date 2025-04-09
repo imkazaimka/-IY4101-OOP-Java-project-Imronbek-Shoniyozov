@@ -12,16 +12,19 @@ public class Triangle extends Shape {
 
     @Override
     public void scale(int factor, boolean sign) {
-        v2 = scaleVertex(v1, v2, factor, sign);
-        v3 = scaleVertex(v1, v3, factor, sign);
-    }
+        // Scale vertex 2 relative to vertex 1 (anchor)
+        int diffX2 = v2.getX() - v1.getX();
+        int diffY2 = v2.getY() - v1.getY();
+        int newDiffX2 = sign ? diffX2 * factor : diffX2 / factor;
+        int newDiffY2 = sign ? diffY2 * factor : diffY2 / factor;
+        v2 = new Coordinates(v1.getX() + newDiffX2, v1.getY() + newDiffY2);
 
-    private Coordinates scaleVertex(Coordinates anchor, Coordinates vertex, int factor, boolean sign) {
-        int diffX = vertex.getX() - anchor.getX();
-        int diffY = vertex.getY() - anchor.getY();
-        int newDiffX = sign ? diffX * factor : diffX / factor;
-        int newDiffY = sign ? diffY * factor : diffY / factor;
-        return new Coordinates(anchor.getX() + newDiffX, anchor.getY() + newDiffY);
+        // Scale vertex 3 relative to vertex 1 (anchor)
+        int diffX3 = v3.getX() - v1.getX();
+        int diffY3 = v3.getY() - v1.getY();
+        int newDiffX3 = sign ? diffX3 * factor : diffX3 / factor;
+        int newDiffY3 = sign ? diffY3 * factor : diffY3 / factor;
+        v3 = new Coordinates(v1.getX() + newDiffX3, v1.getY() + newDiffY3);
     }
 
     @Override
