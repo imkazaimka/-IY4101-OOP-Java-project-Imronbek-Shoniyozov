@@ -10,6 +10,7 @@ public class ShapeManager {
         scanner = new Scanner(System.in);
     }
 
+    // Helper method: Read an integer value with a prompt and validate input.
     private int readValidatedInt(String prompt) {
         int value;
         while (true) {
@@ -26,7 +27,7 @@ public class ShapeManager {
         return value;
     }
 
-
+    // Helper method: Read a double value with a prompt and validate input.
     private double readValidatedDouble(String prompt) {
         double value;
         while (true) {
@@ -43,6 +44,7 @@ public class ShapeManager {
         return value;
     }
 
+    // Helper method: Read a boolean value with a prompt and validate input.
     private boolean readValidatedBoolean(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -57,6 +59,7 @@ public class ShapeManager {
         }
     }
 
+    // Helper method: Read coordinates for a vertex with auto-correction for negative values.
     private Coordinates readValidatedCoordinates(String vertexName) {
         int x = readValidatedInt(vertexName + " - x (will be converted to positive if negative): ");
         int y = readValidatedInt(vertexName + " - y (will be converted to positive if negative): ");
@@ -68,6 +71,7 @@ public class ShapeManager {
         return new Coordinates(x, y);
     }
 
+    // Option 1: Add a new shape.
     public void addShape() {
         System.out.println("\n***********************************");
         System.out.println("         ADD A NEW SHAPE           ");
@@ -145,6 +149,7 @@ public class ShapeManager {
         }
     }
 
+    // Option 2: Remove a shape by its position.
     public void removeShape() {
         System.out.println("\n--- REMOVE A SHAPE ---");
         int index = readValidatedInt("Enter the shape number to remove: ");
@@ -154,6 +159,7 @@ public class ShapeManager {
         }
     }
 
+    // Option 3: Get information about a shape by its position.
     public void getShapeInfo() {
         System.out.println("\n--- GET SHAPE INFORMATION ---");
         int index = readValidatedInt("Enter the shape number to get information: ");
@@ -163,6 +169,7 @@ public class ShapeManager {
         }
     }
 
+    // Option 4: Get area and perimeter of a shape by its position.
     public void viewShapeMetrics() {
         System.out.println("\n--- VIEW AREA & PERIMETER ---");
         int index = readValidatedInt("Enter the shape number to view area and perimeter: ");
@@ -175,11 +182,13 @@ public class ShapeManager {
         }
     }
 
+    // Option 5: Display information of all shapes.
     public void listShapes() {
         System.out.println("\n--- LIST OF ALL SHAPES ---");
         System.out.println(shapeList.display());
     }
 
+    // Option 6: Translate all shapes by a given (dx, dy).
     public void translateShapes() {
         System.out.println("\n--- TRANSLATE SHAPES ---");
         int dx = readValidatedInt("Enter translation dx: ");
@@ -188,6 +197,7 @@ public class ShapeManager {
         System.out.println("All shapes translated by (" + dx + ", " + dy + ").");
     }
 
+    // Option 7: Scale all shapes by a given factor.
     public void scaleShapes() {
         System.out.println("\n--- SCALE SHAPES ---");
         int factor = readValidatedInt("Enter scaling factor (positive integer): ");

@@ -21,20 +21,6 @@ public class Main {
     }
 
 
-    public static boolean getValidatedBoolean(String prompt, Scanner scanner) {
-        while (true) {
-            System.out.print(prompt);
-            if (scanner.hasNextBoolean()) {
-                boolean result = scanner.nextBoolean();
-                scanner.nextLine(); // consume newline
-                return result;
-            } else {
-                System.out.println("Invalid input. Please enter 'true' or 'false'.");
-                scanner.nextLine(); // discard invalid input
-            }
-        }
-    }
-
 
     public static void pause(Scanner scanner) {
         System.out.print("Press Enter to continue...");
